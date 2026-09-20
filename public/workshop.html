@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>کارگاه مونتاژ سخت‌افزار (Assembly Workshop) - HardwareLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/annotations.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#f4f5f8] text-[#1a1d24] min-h-screen flex flex-col">
+
+  <!-- Header Navigation -->
+  <header class="bg-[#111927] border-b border-gray-800 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 text-white hover:text-blue-300 transition">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-extrabold text-sm shadow-md">
+            HL
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight block">HardwareLab</span>
+            <span class="text-[10px] text-gray-400 font-mono block">کارگاه مونتاژ سه‌بعدی</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <a href="/parts.html" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          فهرست قطعات
+        </a>
+        <a href="/workshop.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600/90 text-white">
+          کارگاه مونتاژ (۳ قطعه)
+        </a>
+        <a href="/" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          نمای جامع
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Workshop Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Workshop Stepper & Progress Card -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+              گردش‌کار مرحله‌ای دو فازه
+            </span>
+            <span id="current-phase-pill" class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+              PHASE 1 // LEARN
+            </span>
+          </div>
+          <h1 class="text-xl sm:text-2xl font-extrabold text-gray-900">
+            کارگاه مونتاژ قطعات بنیادین: CPU ،RAM و GPU
+          </h1>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="btn-restart-workshop" class="self-start md:self-auto text-xs font-bold text-gray-500 hover:text-blue-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+          <span>↺ شروع دوباره کارگاه</span>
+        </button>
+      </div>
+
+      <!-- 3 Parts Progress Pills -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-4">
+        <!-- CPU Stepper -->
+        <button onclick="jumpToStep(0)" id="step-btn-0" class="p-3 rounded-xl border text-right transition flex items-center justify-between bg-blue-50/70 border-blue-300">
+          <div>
+            <span class="text-[10px] font-mono text-gray-500 block">گام ۱</span>
+            <span class="text-xs font-bold text-gray-900 block">پردازنده (CPU)</span>
+          </div>
+          <span id="step-badge-0" class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-blue-600 text-white">1</span>
+        </button>
+
+        <!-- RAM Stepper -->
+        <button onclick="jumpToStep(1)" id="step-btn-1" class="p-3 rounded-xl border text-right transition flex items-center justify-between bg-gray-50 border-gray-200">
+          <div>
+            <span class="text-[10px] font-mono text-gray-500 block">گام ۲</span>
+            <span class="text-xs font-bold text-gray-900 block">حافظه رم (RAM)</span>
+          </div>
+          <span id="step-badge-1" class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-gray-200 text-gray-600">2</span>
+        </button>
+
+        <!-- GPU Stepper -->
+        <button onclick="jumpToStep(2)" id="step-btn-2" class="p-3 rounded-xl border text-right transition flex items-center justify-between bg-gray-50 border-gray-200">
+          <div>
+            <span class="text-[10px] font-mono text-gray-500 block">گام ۳</span>
+            <span class="text-xs font-bold text-gray-900 block">کارت گرافیک (GPU)</span>
+          </div>
+          <span id="step-badge-2" class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-gray-200 text-gray-600">3</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Phase Selector Tab Bar -->
+    <div class="flex items-center gap-3">
+      <button
+        id="tab-phase-1"
+        onclick="setPhase('phase1')"
+        class="flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-[#1d314b] text-white border-[#1d314b] shadow-sm"
+      >
+        <span>🔍 فاز ۱: یادگیری مشخصات قطعه مستقل (Learn)</span>
+      </button>
+
+      <button
+        id="tab-phase-2"
+        onclick="setPhase('phase2')"
+        class="flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+      >
+        <span>📍 فاز ۲: جانمایی سوکت و نصب روی مادربرد (Install Location)</span>
+      </button>
+    </div>
+
+    <!-- Workshop Stage Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- 3D Interactive Stage (Left Column) -->
+      <div class="lg:col-span-7 space-y-3">
+        <div id="workshop-viewer-container" class="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#111927] via-[#1a2638] to-[#0f172a] border border-[#2b3c56]/60 shadow-2xl h-[480px] sm:h-[540px] lg:h-[580px] model-viewer-container">
+          
+          <!-- Blueprint Grid Backdrop -->
+          <div class="absolute inset-0 pointer-events-none opacity-20 bg-[linear-gradient(rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.07)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+          <!-- Technical Badge -->
+          <div class="absolute top-4 left-4 z-20 flex items-center gap-2 bg-[#0d1624]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-xs font-mono text-blue-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="workshop-model-badge">3D // model</span>
+          </div>
+
+          <!-- Camera Reset Button -->
+          <div class="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-[#0d1624]/85 backdrop-blur-md p-1 rounded-xl border border-white/10">
+            <button id="workshop-btn-reset-cam" title="بازنشانی زاویه دوربین" class="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            </button>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div id="workshop-loading" class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0d1624]/70 backdrop-blur-sm text-gray-300">
+            <div class="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-mono text-blue-200">در حال بارگذاری مدل...</span>
+          </div>
+
+          <!-- Coming Soon / Fallback Placeholder -->
+          <div id="workshop-placeholder" class="model-placeholder hidden">
+            <div class="text-4xl mb-3">⚠️</div>
+            <div class="model-placeholder-title">مدل سه‌بعدی به زودی اضافه خواهد شد</div>
+            <div class="text-sm text-amber-300 font-bold mb-1">(model coming soon)</div>
+            <div id="workshop-placeholder-name" class="model-placeholder-subtitle">part-name</div>
+          </div>
+
+          <!-- Google Model Viewer -->
+          <model-viewer
+            id="workshop-model-viewer"
+            alt="Hardware Model"
+            camera-controls
+            touch-action="pan-y"
+            environment-image="neutral"
+            shadow-intensity="1.2"
+            shadow-softness="0.8"
+            exposure="1.0"
+            interaction-prompt="none"
+            style="width: 100%; height: 100%; direction: ltr; outline: none;"
+          >
+            <!-- Hotspots dynamically injected -->
+          </model-viewer>
+
+          <!-- Hotspot Tooltip Card -->
+          <div id="workshop-hotspot-card" class="anno-card hidden">
+            <div class="flex items-start justify-between gap-2 mb-1.5">
+              <div class="flex items-center gap-1.5 text-blue-400 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span id="workshop-hotspot-title">عنوان</span>
+              </div>
+              <button id="workshop-hotspot-close" class="text-gray-400 hover:text-white text-xs px-1">✕</button>
+            </div>
+            <p id="workshop-hotspot-desc" class="text-gray-300 text-xs leading-relaxed">توضیحات</p>
+            <div id="workshop-hotspot-step-row" class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-blue-300 hidden">
+              <span>مرحله:</span>
+              <span id="workshop-hotspot-step" class="font-medium text-white">مرحله</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Helper hint -->
+        <div class="bg-white border border-gray-200 rounded-xl p-3 flex items-center justify-between text-xs text-gray-500 shadow-sm">
+          <span id="workshop-hint-text">
+            💡 روی نشانگر متصل با خط راهنما کلیک کنید تا جزئیات سوکت نمایش داده شود.
+          </span>
+          <span class="font-mono text-gray-400 text-[10px]">3D VIEWER</span>
+        </div>
+      </div>
+
+      <!-- Right Sidebar: Interactive Guide & Sequential Flow Buttons -->
+      <div class="lg:col-span-5 space-y-5">
+        
+        <!-- Phase 1 View (Learn) -->
+        <div id="sidebar-phase-1" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+          <div class="border-b border-gray-100 pb-3">
+            <span class="text-[11px] font-bold text-blue-600 block mb-1">
+              فاز ۱: شناخت مهندسی و مشخصات
+            </span>
+            <h2 id="phase1-part-name" class="text-xl sm:text-2xl font-extrabold text-gray-900">
+              نام قطعه
+            </h2>
+            <h3 id="phase1-part-subtitle" class="text-xs font-mono font-semibold text-blue-700 mt-0.5">
+              مدل دقیق
+            </h3>
+          </div>
+
+          <p id="phase1-part-desc" class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+            توضیحات قطعه...
+          </p>
+
+          <!-- Specifications Table -->
+          <div class="space-y-2">
+            <h4 class="text-xs font-bold text-gray-900">مشخصات کلیدی:</h4>
+            <div class="rounded-xl border border-gray-200 overflow-hidden text-xs">
+              <table class="w-full text-right divide-y divide-gray-100">
+                <tbody id="phase1-specs-tbody" class="divide-y divide-gray-100 bg-white">
+                  <!-- specs rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div id="phase1-note-box" class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2">
+            <span class="text-sm">⚠️</span>
+            <span id="phase1-note-text">نکته ایمنی...</span>
+          </div>
+
+          <!-- Phase 1 Action Button: Go to Phase 2 (Next) -->
+          <div class="pt-3 border-t border-gray-100">
+            <button
+              id="btn-next-to-phase2"
+              onclick="setPhase('phase2')"
+              class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs flex items-center justify-between shadow-md transition group"
+            >
+              <span>مرحله بعد: مشاهده محل نصب روی مادربرد</span>
+              <span class="text-base group-hover:-translate-x-1 transition-transform">←</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Phase 2 View (Install Location) -->
+        <div id="sidebar-phase-2" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4 hidden">
+          <div class="border-b border-gray-100 pb-3">
+            <span class="text-[11px] font-bold text-emerald-600 block mb-1">
+              فاز ۲: شناسایی و تثبیت در محل نصب
+            </span>
+            <h2 id="phase2-socket-name" class="text-xl sm:text-2xl font-extrabold text-gray-900">
+              سوکت یا اسلات نصب
+            </h2>
+            <h3 id="phase2-part-target" class="text-xs font-mono font-semibold text-gray-500 mt-0.5">
+              محل نصب اختصاصی قطعه
+            </h3>
+          </div>
+
+          <!-- Installation Steps Checklist -->
+          <div class="space-y-2.5 text-xs text-gray-700">
+            <h4 class="font-bold text-gray-900 flex items-center gap-1.5">
+              <span>📋 گام‌های عملیاتی نصب:</span>
+            </h4>
+            <div id="phase2-instructions-list" class="space-y-2">
+              <!-- Steps populated dynamically -->
+            </div>
+          </div>
+
+          <!-- Safety Warning -->
+          <div id="phase2-warning-box" class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-900 flex items-start gap-2">
+            <span class="text-sm">🛡️</span>
+            <span id="phase2-warning-text">هشدار ایمنی نصب...</span>
+          </div>
+
+          <!-- Phase 2 Action Buttons: Back to Learn OR Next Part -->
+          <div class="pt-3 border-t border-gray-100 space-y-2">
+            <button
+              id="btn-next-part"
+              onclick="nextPartAction()"
+              class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-xs flex items-center justify-between shadow-md transition group"
+            >
+              <span id="btn-next-part-label">قطعه بعدی: حافظه رم (RAM)</span>
+              <span class="text-base group-hover:-translate-x-1 transition-transform">←</span>
+            </button>
+
+            <button
+              onclick="setPhase('phase1')"
+              class="w-full py-2.5 px-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold text-xs transition"
+            >
+              ← بازگشت به فاز ۱ (مشخصات قطعه)
+            </button>
+          </div>
+        </div>
+
+        <!-- Completion Celebration Card (shown when last part is completed) -->
+        <div id="workshop-complete-card" class="bg-gradient-to-br from-emerald-500 to-teal-700 text-white rounded-2xl p-6 shadow-xl space-y-4 hidden">
+          <div class="text-center space-y-2">
+            <div class="text-4xl">🎉</div>
+            <h3 class="text-xl font-extrabold">کارگاه مونتاژ با موفقیت به پایان رسید!</h3>
+            <p class="text-xs text-emerald-100 leading-relaxed max-w-sm mx-auto">
+              شما با موفقیت جایگاه ۳ قطعه کلیدی (پردازنده، حافظه رم و کارت گرافیک) را روی مادربرد فرا گرفتید.
+            </p>
+          </div>
+
+          <div class="pt-2 flex flex-col sm:flex-row gap-2">
+            <button onclick="jumpToStep(0)" class="flex-1 py-2.5 px-3 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition shadow-sm">
+              تکرار مجدد کارگاه
+            </button>
+            <a href="/parts.html" class="flex-1 py-2.5 px-3 rounded-xl bg-emerald-900/60 hover:bg-emerald-900/80 text-white font-bold text-xs text-center transition">
+              مشاهده سایر قطعات
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let workshopData = [];
+    let currentStepIndex = 0; // 0 = cpu, 1 = ram, 2 = gpu
+    let currentPhase = 'phase1'; // 'phase1' | 'phase2'
+
+    async function initWorkshop() {
+      try {
+        const res = await fetch('/data/workshop-parts.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        workshopData = data.parts || [];
+        
+        renderWorkshopStep();
+      } catch (err) {
+        console.error('Error loading workshop data:', err);
+      }
+    }
+
+    function jumpToStep(stepIdx) {
+      if (stepIdx < 0 || stepIdx >= workshopData.length) return;
+      currentStepIndex = stepIdx;
+      currentPhase = 'phase1';
+      document.getElementById('workshop-complete-card').classList.add('hidden');
+      renderWorkshopStep();
+    }
+
+    function setPhase(phase) {
+      currentPhase = phase;
+      document.getElementById('workshop-complete-card').classList.add('hidden');
+      renderWorkshopStep();
+    }
+
+    function nextPartAction() {
+      if (currentStepIndex < workshopData.length - 1) {
+        currentStepIndex++;
+        currentPhase = 'phase1';
+        renderWorkshopStep();
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+      } else {
+        // Completed all 3 parts!
+        document.getElementById('sidebar-phase-2').classList.add('hidden');
+        document.getElementById('workshop-complete-card').classList.remove('hidden');
+        // Mark step 2 as checked
+        document.getElementById('step-badge-2').innerHTML = '✓';
+      }
+    }
+
+    function renderWorkshopStep() {
+      const part = workshopData[currentStepIndex];
+      if (!part) return;
+
+      // Update Phase Tab styles
+      const tab1 = document.getElementById('tab-phase-1');
+      const tab2 = document.getElementById('tab-phase-2');
+      const phasePill = document.getElementById('current-phase-pill');
+
+      if (currentPhase === 'phase1') {
+        tab1.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-[#1d314b] text-white border-[#1d314b] shadow-sm';
+        tab2.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50';
+        phasePill.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200';
+        phasePill.innerText = 'PHASE 1 // LEARN';
+
+        document.getElementById('sidebar-phase-1').classList.remove('hidden');
+        document.getElementById('sidebar-phase-2').classList.add('hidden');
+        document.getElementById('workshop-complete-card').classList.add('hidden');
+      } else {
+        tab1.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-white text-gray-600 border-gray-200 hover:bg-gray-50';
+        tab2.className = 'flex-1 py-3 px-4 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-2 bg-[#1d314b] text-white border-[#1d314b] shadow-sm';
+        phasePill.className = 'text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200';
+        phasePill.innerText = 'PHASE 2 // INSTALL LOCATION';
+
+        document.getElementById('sidebar-phase-1').classList.add('hidden');
+        document.getElementById('sidebar-phase-2').classList.remove('hidden');
+        document.getElementById('workshop-complete-card').classList.add('hidden');
+      }
+
+      // Update Stepper Badges
+      workshopData.forEach((p, idx) => {
+        const btn = document.getElementById('step-btn-' + idx);
+        const badge = document.getElementById('step-badge-' + idx);
+        if (idx === currentStepIndex) {
+          btn.className = 'p-3 rounded-xl border text-right transition flex items-center justify-between bg-blue-50/70 border-blue-400 ring-2 ring-blue-400/30';
+          badge.className = 'w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-blue-600 text-white';
+          badge.innerText = (idx + 1);
+        } else if (idx < currentStepIndex) {
+          btn.className = 'p-3 rounded-xl border text-right transition flex items-center justify-between bg-emerald-50/50 border-emerald-200';
+          badge.className = 'w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-emerald-600 text-white';
+          badge.innerHTML = '✓';
+        } else {
+          btn.className = 'p-3 rounded-xl border text-right transition flex items-center justify-between bg-gray-50 border-gray-200';
+          badge.className = 'w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center bg-gray-200 text-gray-600';
+          badge.innerText = (idx + 1);
+        }
+      });
+
+      // Populate Phase 1 Details
+      document.getElementById('phase1-part-name').innerText = part.name;
+      document.getElementById('phase1-part-subtitle').innerText = part.subtitle;
+      document.getElementById('phase1-part-desc').innerText = part.description;
+
+      const specsTbody = document.getElementById('phase1-specs-tbody');
+      specsTbody.innerHTML = (part.specs || []).map((s, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-gray-50/60' : 'bg-white'}">
+          <th class="py-2 px-3 font-medium text-gray-500 w-2/5">${s.key}</th>
+          <td class="py-2 px-3 font-bold text-gray-900 font-mono">${s.value}</td>
+        </tr>
+      `).join('');
+
+      if (part.note) {
+        document.getElementById('phase1-note-text').innerText = part.note;
+        document.getElementById('phase1-note-box').classList.remove('hidden');
+      } else {
+        document.getElementById('phase1-note-box').classList.add('hidden');
+      }
+
+      // Populate Phase 2 Details
+      const loc = part.installLocation;
+      if (loc) {
+        document.getElementById('phase2-socket-name').innerText = loc.socketName;
+        document.getElementById('phase2-part-target').innerText = loc.label;
+        
+        const instructionsList = document.getElementById('phase2-instructions-list');
+        instructionsList.innerHTML = (loc.instructions || []).map((step, idx) => `
+          <div class="flex items-start gap-2.5 p-2 rounded-lg bg-gray-50 border border-gray-200/80">
+            <span class="w-4 h-4 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+              ${idx + 1}
+            </span>
+            <span class="text-gray-700 leading-relaxed">${step}</span>
+          </div>
+        `).join('');
+
+        if (loc.safetyWarning) {
+          document.getElementById('phase2-warning-text').innerText = loc.safetyWarning;
+          document.getElementById('phase2-warning-box').classList.remove('hidden');
+        } else {
+          document.getElementById('phase2-warning-box').classList.add('hidden');
+        }
+      }
+
+      // Label for Next Part Button
+      const nextPartBtnLabel = document.getElementById('btn-next-part-label');
+      if (currentStepIndex < workshopData.length - 1) {
+        const nextPart = workshopData[currentStepIndex + 1];
+        nextPartBtnLabel.innerText = 'نصب قطعه بعدی: ' + nextPart.name;
+      } else {
+        nextPartBtnLabel.innerText = 'تکمیل نهایی کارگاه مونتاژ';
+      }
+
+      // 3D Model Setup
+      setupWorkshop3D(part);
+    }
+
+    function setupWorkshop3D(part) {
+      const viewer = document.getElementById('workshop-model-viewer');
+      const loader = document.getElementById('workshop-loading');
+      const placeholder = document.getElementById('workshop-placeholder');
+      const badge = document.getElementById('workshop-model-badge');
+      const card = document.getElementById('workshop-hotspot-card');
+
+      card.classList.add('hidden');
+
+      let targetModel = '';
+      let cameraOrbit = '-20deg 75deg 105%';
+      let cameraTarget = 'auto auto auto';
+      let hotspotsToRender = [];
+
+      if (currentPhase === 'phase1') {
+        targetModel = part.model;
+        badge.innerText = '3D // ' + part.model;
+        hotspotsToRender = part.hotspots || [];
+        document.getElementById('workshop-hint-text').innerText = '💡 برای بررسی اجزای قطعه، مدل را بچرخانید و روی نشانگرها کلیک کنید.';
+      } else {
+        const loc = part.installLocation;
+        targetModel = loc ? loc.targetModel : 'motherboard.glb';
+        badge.innerText = '3D // motherboard.glb (' + (loc ? loc.socketName : '') + ')';
+        cameraOrbit = loc?.cameraOrbit || '-15deg 65deg 55%';
+        cameraTarget = loc?.cameraTarget || 'auto auto auto';
+        document.getElementById('workshop-hint-text').innerText = '💡 خط راهنما و نشانگر مشخص‌کننده موقعیت دقیق نصب قطعه روی مادربرد است.';
+
+        if (loc) {
+          hotspotsToRender = [{
+            id: 'install-' + part.id,
+            label: loc.label,
+            position: loc.position,
+            normal: loc.normal || '0 1 0',
+            description: loc.description,
+            leaderDirection: loc.leaderDirection || 'left',
+            step: loc.step
+          }];
+        }
+      }
+
+      if (!targetModel || targetModel.trim() === '') {
+        viewer.classList.add('hidden');
+        loader.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        document.getElementById('workshop-placeholder-name').innerText = part.name;
+        return;
+      }
+
+      placeholder.classList.add('hidden');
+      viewer.classList.remove('hidden');
+      loader.classList.remove('hidden');
+
+      const modelUrl = targetModel.startsWith('/') ? targetModel : '/3d-models/' + targetModel;
+      viewer.src = modelUrl;
+      viewer.cameraOrbit = cameraOrbit;
+      viewer.cameraTarget = cameraTarget;
+
+      // Clear existing hotspots
+      const existing = viewer.querySelectorAll('[slot^="hotspot-"]');
+      existing.forEach(el => el.remove());
+
+      // Insert Hotspots
+      hotspotsToRender.forEach((h, index) => {
+        const offset = currentPhase === 'phase2' 
+          ? (h.leaderDirection === 'right' ? { x: 18, y: -24 } : { x: -18, y: -24 })
+          : { x: index % 2 === 0 ? -14 : 14, y: index % 2 === 0 ? -22 : 22 };
+        const isLeft = h.leaderDirection === 'left' || offset.x < 0;
+
+        const btn = document.createElement('button');
+        btn.slot = 'hotspot-' + h.id;
+        btn.className = 'anno' + (currentPhase === 'phase2' ? ' active' : '');
+        btn.setAttribute('data-position', h.position);
+        btn.setAttribute('data-normal', h.normal || '0 1 0');
+        btn.setAttribute('aria-label', h.label);
+        btn.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+
+        btn.innerHTML = `
+          <svg class="anno-leader" style="width: 60px; height: 40px; top: ${offset.y < 0 ? '100%' : '-30px'}; left: ${isLeft ? '80%' : '-40px'};">
+            <line x1="${isLeft ? '10' : '50'}" y1="${offset.y < 0 ? '0' : '35'}" x2="${isLeft ? '45' : '15'}" y2="${offset.y < 0 ? '30' : '5'}"></line>
+          </svg>
+          <div class="anno-pill ${currentPhase === 'phase2' ? 'active' : ''}">
+            <span class="anno-dot"></span>
+            <span>${h.label}</span>
+          </div>
+        `;
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const wasActive = btn.classList.contains('active') && !card.classList.contains('hidden');
+          viewer.querySelectorAll('.anno').forEach(el => el.classList.remove('active'));
+          
+          if (!wasActive) {
+            btn.classList.add('active');
+            document.getElementById('workshop-hotspot-title').innerText = h.label;
+            document.getElementById('workshop-hotspot-desc').innerText = h.description;
+            if (h.step) {
+              document.getElementById('workshop-hotspot-step').innerText = h.step;
+              document.getElementById('workshop-hotspot-step-row').classList.remove('hidden');
+            } else {
+              document.getElementById('workshop-hotspot-step-row').classList.add('hidden');
+            }
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        viewer.appendChild(btn);
+
+        // In phase 2, open tooltip by default to show socket details!
+        if (currentPhase === 'phase2') {
+          setTimeout(() => {
+            document.getElementById('workshop-hotspot-title').innerText = h.label;
+            document.getElementById('workshop-hotspot-desc').innerText = h.description;
+            if (h.step) {
+              document.getElementById('workshop-hotspot-step').innerText = h.step;
+              document.getElementById('workshop-hotspot-step-row').classList.remove('hidden');
+            }
+            card.classList.remove('hidden');
+          }, 350);
+        }
+      });
+
+      const onLoad = () => {
+        loader.classList.add('hidden');
+        placeholder.classList.add('hidden');
+      };
+      const onError = () => {
+        loader.classList.add('hidden');
+        viewer.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        document.getElementById('workshop-placeholder-name').innerText = targetModel;
+      };
+
+      viewer.removeEventListener('load', onLoad);
+      viewer.removeEventListener('error', onError);
+      viewer.addEventListener('load', onLoad, { once: true });
+      viewer.addEventListener('error', onError, { once: true });
+    }
+
+    // Reset camera button
+    document.getElementById('workshop-btn-reset-cam').onclick = () => {
+      const part = workshopData[currentStepIndex];
+      setupWorkshop3D(part);
+    };
+
+    // Restart workshop button
+    document.getElementById('btn-restart-workshop').onclick = () => {
+      jumpToStep(0);
+    };
+
+    // Close tooltip card
+    document.getElementById('workshop-hotspot-close').onclick = () => {
+      document.getElementById('workshop-hotspot-card').classList.add('hidden');
+    };
+
+    document.addEventListener('DOMContentLoaded', initWorkshop);
+  </script>
+</body>
+</html>

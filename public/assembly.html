@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>راهنمای گام‌به‌گام مونتاژ رایانه - پودمان ۱ کارگاه سخت‌افزار</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Industrial Caution Strip Styling */
+    .hazard-strip {
+      background: repeating-linear-gradient(
+        -45deg,
+        #f59e0b,
+        #f59e0b 8px,
+        #111827 8px,
+        #111827 16px
+      );
+    }
+  </style>
+</head>
+<body class="bg-[#f4f5f8] text-[#1a1d24] min-h-screen flex flex-col">
+
+  <!-- Header Navigation -->
+  <header class="bg-[#111927] border-b border-gray-800 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 text-white hover:text-blue-300 transition">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-extrabold text-sm shadow-md">
+            HL
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight block">HardwareLab</span>
+            <span class="text-[10px] text-gray-400 font-mono block">راهنمای جامع مونتاژ رایانه</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <a href="/parts.html" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          اطلس قطعات
+        </a>
+        <a href="/workshop.html" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          کارگاه ۳ قطعه
+        </a>
+        <a href="/assembly.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm">
+          راهنمای ۱۵ مرحله‌ای
+        </a>
+        <a href="/" class="px-3 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          داشبورد اصلی
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Assembly Guide Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Horizontal Progress Bar Header Card -->
+    <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      
+      <!-- Top info bar with text counters -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 font-mono">
+              UNIT 1 // پودمان اول کتاب درسی
+            </span>
+            <span class="text-[11px] font-bold text-gray-500">
+              کارگاه سخت‌افزار و شبکه
+            </span>
+          </div>
+          <h1 class="text-lg sm:text-2xl font-extrabold text-gray-900 tracking-tight">
+            راهنمای مرحله‌به‌مرحله مونتاژ قطعات رایانه
+          </h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Step Counter Badge -->
+          <div class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 rounded-xl flex items-center gap-2">
+            <span class="text-xs text-gray-500 font-semibold">وضعیت پیشرفت:</span>
+            <span id="progress-text-badge" class="text-xs font-mono font-extrabold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md">
+              گام ۱ از ۱۵ (۷٪)
+            </span>
+          </div>
+
+          <!-- Reset / Restart button -->
+          <button id="btn-restart" class="text-xs font-semibold text-gray-500 hover:text-blue-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5" title="شروع مجدد از گام ۱">
+            <span>↺ بازنشانی</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Horizontal Continuous Progress Bar -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-[11px] font-mono font-semibold text-gray-400">
+          <span>شروع: آماده‌سازی کیس</span>
+          <span id="percent-label" class="text-blue-600 font-bold">۷٪</span>
+          <span>پایان: تست POST و بایوس</span>
+        </div>
+        
+        <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden p-0.5 border border-gray-200/80">
+          <div id="progress-bar-fill" class="h-full bg-gradient-to-l from-blue-700 via-indigo-600 to-blue-500 rounded-full transition-all duration-300 shadow-sm" style="width: 6.66%;"></div>
+        </div>
+      </div>
+
+      <!-- 15 Clickable Step Pointers (Horizontal Rail) -->
+      <div class="pt-1 overflow-x-auto pb-1">
+        <div id="steps-pill-container" class="flex items-center justify-between min-w-[620px] gap-1.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Active Step Work Area (One Step Shown at a Time) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- Left Column: 3D Visualization Viewer -->
+      <div class="lg:col-span-6 space-y-3">
+        <div class="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#111927] via-[#1a2638] to-[#0f172a] border border-[#2b3c56]/60 shadow-xl h-[420px] sm:h-[480px]">
+          
+          <!-- 3D Model Viewer -->
+          <model-viewer
+            id="step-model-viewer"
+            src="/3d-models/case.glb"
+            alt="مدل سه‌بعدی قطعه"
+            camera-controls
+            auto-rotate
+            rotation-per-second="20deg"
+            shadow-intensity="1.5"
+            shadow-softness="0.8"
+            exposure="1.0"
+            camera-orbit="-20deg 75deg 105%"
+            min-camera-orbit="auto auto 40%"
+            max-camera-orbit="auto auto 250%"
+            class="w-full h-full"
+          >
+            <!-- Loading Indicator -->
+            <div slot="poster" class="w-full h-full flex flex-col items-center justify-center text-white/70 space-y-3 bg-[#111927]">
+              <div class="w-10 h-10 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+              <span class="text-xs font-medium">در حال بارگذاری نمای سه‌بعدی...</span>
+            </div>
+          </model-viewer>
+
+          <!-- Fallback "Model Coming Soon" Box (hidden by default) -->
+          <div id="model-fallback-box" class="hidden absolute inset-0 bg-[#0f172a]/95 backdrop-blur-sm flex flex-col items-center justify-center text-center p-6 space-y-3 z-20">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-2xl text-amber-400">
+              ⚠️
+            </div>
+            <h4 class="text-base font-bold text-amber-200">مدل سه‌بعدی به زودی اضافه خواهد شد</h4>
+            <p class="text-xs text-gray-400 max-w-sm leading-relaxed">
+              (model coming soon) فایل سه‌بعدی مربوط به این مرحله در حال آماده‌سازی و بهینه‌سازی نهایی است.
+            </p>
+          </div>
+
+          <!-- Top-Left Interactive Pill -->
+          <div class="absolute top-4 left-4 z-10">
+            <span id="model-label-pill" class="text-[10px] font-mono font-bold bg-[#111927]/90 text-blue-300 border border-blue-500/40 px-2.5 py-1 rounded-lg backdrop-blur-md">
+              3D // CASE.GLB
+            </span>
+          </div>
+
+          <!-- Bottom-Left Camera Controls -->
+          <div class="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 bg-[#111927]/80 backdrop-blur-md border border-gray-700/60 p-1.5 rounded-xl">
+            <button id="btn-reset-camera" class="px-2 py-1 rounded-lg text-[10px] font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" title="زاویه پیش‌فرض">
+              زاویه پیش‌فرض
+            </button>
+            <button id="btn-toggle-rotate" class="px-2 py-1 rounded-lg text-[10px] font-bold text-gray-300 hover:text-white hover:bg-white/10 transition" title="توقف/شروع چرخش">
+              چرخش خودکار
+            </button>
+          </div>
+
+        </div>
+
+        <!-- 3D Viewer footer tip -->
+        <div class="bg-white border border-gray-200 rounded-xl p-3 flex items-center justify-between text-xs text-gray-500 shadow-sm">
+          <span>💡 مدل را با ماوس یا لمس بچرخانید و با غلتک ماوس روی اتصالات بزرگ‌نمایی کنید.</span>
+          <span class="font-mono text-gray-400 text-[10px]">3D INTERACTIVE</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Single Step Focus Card -->
+      <div class="lg:col-span-6 space-y-4">
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+          
+          <!-- Step Header & Part Tag -->
+          <div class="border-b border-gray-100 pb-4 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span id="step-number-tag" class="text-xs font-bold font-mono px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+                مرحله ۱ از ۱۵
+              </span>
+
+              <!-- Related Part Link Badge -->
+              <a id="related-part-link" href="/part-detail.html?part=case" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 text-xs font-bold text-gray-700 hover:text-blue-700 transition">
+                <span>قطعه مرتبط:</span>
+                <span id="related-part-name" class="underline">کیس کامپیوتر</span>
+                <span class="text-blue-600">↗</span>
+              </a>
+            </div>
+
+            <h2 id="step-title" class="text-xl sm:text-2xl font-extrabold text-gray-900 leading-snug">
+              آماده‌سازی کیس و نصب پایه‌های برنجی و شیلد درگاه‌ها
+            </h2>
+
+            <p id="step-component-subtitle" class="text-xs font-semibold text-gray-500">
+              قطعه هدف: شاسی کیس، پایه‌های برنجی (Standoffs) و I/O Shield
+            </p>
+          </div>
+
+          <!-- Small Industrial-Style Warning Strip (Only shown when safety warning exists) -->
+          <div id="industrial-warning-strip" class="rounded-xl overflow-hidden border border-amber-500/40 bg-[#121620] text-amber-200 shadow-md flex items-stretch">
+            <!-- Left caution hazard stripe bar -->
+            <div class="w-2.5 hazard-strip flex-shrink-0"></div>
+
+            <!-- Warning content -->
+            <div class="p-3.5 flex-1 flex items-start gap-3">
+              <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-black flex-shrink-0 mt-0.5 border border-amber-500/30">
+                ⚠
+              </div>
+              <div class="space-y-0.5 text-xs">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/70 border border-amber-600/40 px-1.5 py-0.2 rounded">
+                    CAUTION // ایمنی کارگاهی
+                  </span>
+                  <span class="font-bold text-amber-300">نکته ایمنی الزامی کتاب درسی:</span>
+                </div>
+                <p id="warning-text" class="text-amber-100/90 leading-relaxed pt-0.5 font-medium">
+                  پیش از لمس هرگونه قطعه الکترونیکی، بار الکتریسیته ساکن بدن (ESD) را با دست زدن به بدنه فلزی رنگ‌نشده یا بستن مچ‌بند ارت تخلیه نمایید.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Textbook Detailed Description -->
+          <div class="space-y-1.5">
+            <h3 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+              <span>📖 شرح فنی مرحله:</span>
+            </h3>
+            <p id="step-description" class="text-xs sm:text-sm text-gray-600 leading-relaxed bg-gray-50/60 p-3.5 rounded-xl border border-gray-100">
+              کیس کامپیوتر اسکلت اصلی نگهداری قطعات است. در این مرحله پس از باز کردن هر دو پنل کناری کیس...
+            </p>
+          </div>
+
+          <!-- Numbered Actionable Instructions -->
+          <div class="space-y-2.5">
+            <h3 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+              <span>⚡ مراحل اجرایی در کارگاه:</span>
+            </h3>
+            <div id="step-instructions-list" class="space-y-2">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Mark Complete Toggle & Navigation Controls -->
+          <div class="pt-4 border-t border-gray-100 space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <button id="btn-toggle-completed" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100">
+                <span id="completed-icon" class="w-4 h-4 rounded-full border border-gray-400 flex items-center justify-center text-[10px]"></span>
+                <span id="completed-text">ثبت این گام به عنوان انجام شده</span>
+              </button>
+
+              <span id="keyboard-hint" class="hidden sm:inline-block text-[10px] text-gray-400 font-mono">
+                کلیدهای ← / → جهت پیمایش
+              </span>
+            </div>
+
+            <!-- Previous and Next Buttons -->
+            <div class="flex items-center gap-3">
+              <button
+                id="btn-prev"
+                class="flex-1 py-3 px-4 rounded-xl border border-gray-300 text-gray-700 font-bold text-xs hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+              >
+                <span>← مرحله قبل</span>
+              </button>
+
+              <button
+                id="btn-next"
+                class="flex-1 py-3 px-4 rounded-xl bg-[#1d314b] hover:bg-[#253f60] text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 group"
+              >
+                <span id="btn-next-text">مرحله بعد</span>
+                <span class="group-hover:-translate-x-1 transition-transform">→</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Final Completion Congratulatory Card (Initially Hidden) -->
+    <div id="assembly-completed-card" class="hidden bg-gradient-to-br from-emerald-600 via-teal-700 to-cyan-800 text-white rounded-2xl p-6 sm:p-8 shadow-xl">
+      <div class="max-w-2xl mx-auto text-center space-y-4">
+        <div class="inline-flex w-16 h-16 rounded-full bg-white/20 backdrop-blur-md items-center justify-center text-3xl shadow-inner">
+          🎉
+        </div>
+        <h3 class="text-2xl sm:text-3xl font-black">
+          تبریک! تمام ۱۵ مرحله مونتاژ رایانه با موفقیت به پایان رسید
+        </h3>
+        <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed">
+          شما استانداردها و نکات ایمنی پودمان اول کتاب کارگاه سخت‌افزار را از آماده‌سازی کیس و نصب پردازنده تا کابل‌کشی و بوت اولیه بایوس را به طور کامل مرور کردید. اکنون می‌توانید در بخش آزمون‌ها دانسته‌های خود را بسنجید.
+        </p>
+
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <a href="/parts.html" class="px-5 py-2.5 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition shadow">
+            مشاهده مجدد اطلس قطعات
+          </a>
+          <a href="/workshop.html" class="px-5 py-2.5 rounded-xl bg-white/20 text-white border border-white/30 font-bold text-xs hover:bg-white/30 transition">
+            تمرین در کارگاه ۳ قطعه
+          </a>
+          <button id="btn-completed-restart" class="px-5 py-2.5 rounded-xl bg-emerald-900/60 text-white font-bold text-xs hover:bg-emerald-900/80 transition">
+            مرور مجدد از مرحله ۱
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 mt-12 py-6 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4">
+      پروژه آموزشی آزمایشگاه سخت‌افزار رایانه • منطبق بر سرفصل‌های رسمی پودمان اول کتاب کارگاه سخت‌افزار و شبکه
+    </div>
+  </footer>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    (async function() {
+      let assemblyData = null;
+      let steps = [];
+      let currentStepIndex = 0; // 0-based
+      let completedSteps = JSON.parse(localStorage.getItem('completed_assembly_steps') || '[]');
+
+      // DOM Elements
+      const progressBarFill = document.getElementById('progress-bar-fill');
+      const progressTextBadge = document.getElementById('progress-text-badge');
+      const percentLabel = document.getElementById('percent-label');
+      const stepsPillContainer = document.getElementById('steps-pill-container');
+      
+      const stepNumberTag = document.getElementById('step-number-tag');
+      const stepTitle = document.getElementById('step-title');
+      const stepComponentSubtitle = document.getElementById('step-component-subtitle');
+      const stepDescription = document.getElementById('step-description');
+      const stepInstructionsList = document.getElementById('step-instructions-list');
+      
+      const relatedPartLink = document.getElementById('related-part-link');
+      const relatedPartName = document.getElementById('related-part-name');
+      
+      const industrialWarningStrip = document.getElementById('industrial-warning-strip');
+      const warningText = document.getElementById('warning-text');
+      
+      const stepModelViewer = document.getElementById('step-model-viewer');
+      const modelFallbackBox = document.getElementById('model-fallback-box');
+      const modelLabelPill = document.getElementById('model-label-pill');
+      const btnResetCamera = document.getElementById('btn-reset-camera');
+      const btnToggleRotate = document.getElementById('btn-toggle-rotate');
+      
+      const btnToggleCompleted = document.getElementById('btn-toggle-completed');
+      const completedIcon = document.getElementById('completed-icon');
+      const completedText = document.getElementById('completed-text');
+      
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const btnNextText = document.getElementById('btn-next-text');
+      const btnRestart = document.getElementById('btn-restart');
+      
+      const assemblyCompletedCard = document.getElementById('assembly-completed-card');
+      const btnCompletedRestart = document.getElementById('btn-completed-restart');
+
+      // Fetch Steps JSON
+      try {
+        const res = await fetch('/data/assembly-steps.json');
+        if (!res.ok) throw new Error('Failed to load /data/assembly-steps.json');
+        assemblyData = await res.json();
+        steps = assemblyData.steps || [];
+      } catch (err) {
+        console.warn('Falling back to local fallback steps:', err);
+        // Fallback embedded data if fetch fails
+        steps = getFallbackSteps();
+      }
+
+      if (!steps || steps.length === 0) return;
+
+      // Handle 3D Model load error
+      stepModelViewer.addEventListener('error', () => {
+        modelFallbackBox.classList.remove('hidden');
+      });
+
+      stepModelViewer.addEventListener('load', () => {
+        modelFallbackBox.classList.add('hidden');
+      });
+
+      // Part names mapping
+      const partNamesMap = {
+        'case': 'کیس کامپیوتر',
+        'motherboard': 'مادربرد اصلی',
+        'cpu': 'پردازنده مرکزی (CPU)',
+        'cooling': 'خنک‌کننده پردازنده',
+        'ram': 'حافظه رم (RAM)',
+        'power_supply': 'منبع تغذیه (PSU)',
+        'storage': 'حافظه ذخیره‌سازی (SSD/HDD)',
+        'gpu': 'کارت گرافیک (GPU)'
+      };
+
+      // Render step indicators
+      function renderStepPills() {
+        stepsPillContainer.innerHTML = '';
+        steps.forEach((st, idx) => {
+          const isCurrent = idx === currentStepIndex;
+          const isDone = completedSteps.includes(st.step);
+
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className = `flex-1 min-w-[34px] py-1.5 px-1 rounded-xl text-center text-xs font-mono font-bold transition flex flex-col items-center justify-center gap-0.5 border ${
+            isCurrent
+              ? 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300 shadow-sm'
+              : isDone
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100'
+                : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+          }`;
+
+          pill.title = `مرحله ${st.step}: ${st.title}`;
+          pill.innerHTML = `
+            <span class="text-[10px] leading-none">${isDone && !isCurrent ? '✓' : st.step}</span>
+            <span class="w-1.5 h-1.5 rounded-full ${isCurrent ? 'bg-white' : isDone ? 'bg-emerald-500' : 'bg-gray-300'}"></span>
+          `;
+
+          pill.addEventListener('click', () => {
+            currentStepIndex = idx;
+            renderCurrentStep();
+          });
+
+          stepsPillContainer.appendChild(pill);
+        });
+      }
+
+      // Render Current Step Function
+      function renderCurrentStep() {
+        const step = steps[currentStepIndex];
+        if (!step) return;
+
+        const total = steps.length;
+        const currentStepNum = step.step || (currentStepIndex + 1);
+        const percent = Math.round((currentStepNum / total) * 100);
+
+        // Update progress bar
+        progressBarFill.style.width = `${(currentStepNum / total) * 100}%`;
+        progressTextBadge.textContent = `گام ${currentStepNum} از ${total} (${percent}٪)`;
+        percentLabel.textContent = `${percent}٪`;
+
+        // Update titles
+        stepNumberTag.textContent = `مرحله ${currentStepNum} از ${total}`;
+        stepTitle.textContent = step.title;
+        stepComponentSubtitle.textContent = `قطعه هدف: ${step.component || 'اجزای کیس'}`;
+        stepDescription.textContent = step.description;
+
+        // Related Part Link
+        if (step.partId) {
+          relatedPartLink.classList.remove('hidden');
+          relatedPartLink.href = `/part-detail.html?part=${step.partId}`;
+          relatedPartName.textContent = partNamesMap[step.partId] || step.partId;
+        } else {
+          relatedPartLink.classList.add('hidden');
+        }
+
+        // Industrial-style warning strip
+        if (step.safetyWarning && step.safetyWarning.trim().length > 0) {
+          warningText.textContent = step.safetyWarning;
+          industrialWarningStrip.classList.remove('hidden');
+        } else {
+          industrialWarningStrip.classList.add('hidden');
+        }
+
+        // Render instructions
+        stepInstructionsList.innerHTML = '';
+        (step.instructions || []).forEach((inst, i) => {
+          const item = document.createElement('div');
+          item.className = 'flex items-start gap-2.5 p-3 rounded-xl bg-gray-50/80 border border-gray-200/80 text-xs sm:text-sm text-gray-700';
+          item.innerHTML = `
+            <span class="w-5 h-5 rounded-lg bg-[#1d314b] text-white flex items-center justify-center font-mono text-[11px] font-bold flex-shrink-0 mt-0.5">
+              ${i + 1}
+            </span>
+            <span class="leading-relaxed font-medium">${inst}</span>
+          `;
+          stepInstructionsList.appendChild(item);
+        });
+
+        // 3D Model Update
+        const modelName = step.model || (step.partId ? `${step.partId}.glb` : 'motherboard.glb');
+        modelLabelPill.textContent = `3D // ${modelName.toUpperCase()}`;
+        modelFallbackBox.classList.add('hidden');
+        stepModelViewer.src = `/3d-models/${modelName}`;
+
+        // Completed button state
+        const isDone = completedSteps.includes(currentStepNum);
+        if (isDone) {
+          btnToggleCompleted.className = 'inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition bg-emerald-50 text-emerald-800 border-emerald-300';
+          completedIcon.className = 'w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold';
+          completedIcon.textContent = '✓';
+          completedText.textContent = 'این مرحله انجام شده است';
+        } else {
+          btnToggleCompleted.className = 'inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold border transition bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100';
+          completedIcon.className = 'w-4 h-4 rounded-full border border-gray-400 flex items-center justify-center text-[10px]';
+          completedIcon.textContent = '';
+          completedText.textContent = 'ثبت این گام به عنوان انجام شده';
+        }
+
+        // Prev / Next button states
+        btnPrev.disabled = currentStepIndex === 0;
+
+        if (currentStepIndex === total - 1) {
+          btnNextText.textContent = 'اتمام مونتاژ 🎉';
+          btnNext.className = 'flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 group';
+        } else {
+          btnNextText.textContent = 'مرحله بعد';
+          btnNext.className = 'flex-1 py-3 px-4 rounded-xl bg-[#1d314b] hover:bg-[#253f60] text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 group';
+        }
+
+        // Re-render pills
+        renderStepPills();
+      }
+
+      // Toggle completed handler
+      btnToggleCompleted.addEventListener('click', () => {
+        const stepNum = steps[currentStepIndex].step;
+        if (completedSteps.includes(stepNum)) {
+          completedSteps = completedSteps.filter(s => s !== stepNum);
+        } else {
+          completedSteps.push(stepNum);
+        }
+        localStorage.setItem('completed_assembly_steps', JSON.stringify(completedSteps));
+        renderCurrentStep();
+      });
+
+      // Next / Prev Handlers
+      btnPrev.addEventListener('click', () => {
+        if (currentStepIndex > 0) {
+          currentStepIndex--;
+          renderCurrentStep();
+          window.scrollTo({ top: 120, behavior: 'smooth' });
+        }
+      });
+
+      btnNext.addEventListener('click', () => {
+        const total = steps.length;
+        // Mark current as completed when moving next
+        const stepNum = steps[currentStepIndex].step;
+        if (!completedSteps.includes(stepNum)) {
+          completedSteps.push(stepNum);
+          localStorage.setItem('completed_assembly_steps', JSON.stringify(completedSteps));
+        }
+
+        if (currentStepIndex < total - 1) {
+          currentStepIndex++;
+          renderCurrentStep();
+          window.scrollTo({ top: 120, behavior: 'smooth' });
+        } else {
+          // Completed all steps
+          assemblyCompletedCard.classList.remove('hidden');
+          assemblyCompletedCard.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      // Restart handler
+      function restartGuide() {
+        currentStepIndex = 0;
+        assemblyCompletedCard.classList.add('hidden');
+        renderCurrentStep();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      btnRestart.addEventListener('click', restartGuide);
+      btnCompletedRestart.addEventListener('click', restartGuide);
+
+      // Camera reset & auto-rotate toggles
+      btnResetCamera.addEventListener('click', () => {
+        stepModelViewer.cameraOrbit = '-20deg 75deg 105%';
+        stepModelViewer.resetTurntableRotation();
+      });
+
+      let rotating = true;
+      btnToggleRotate.addEventListener('click', () => {
+        rotating = !rotating;
+        stepModelViewer.autoRotate = rotating;
+        btnToggleRotate.textContent = rotating ? 'چرخش خودکار: روشن' : 'چرخش خودکار: خاموش';
+      });
+
+      // Keyboard navigation
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          // In RTL, ArrowLeft often means forward
+          if (currentStepIndex < steps.length - 1) {
+            currentStepIndex++;
+            renderCurrentStep();
+          }
+        } else if (e.key === 'ArrowRight') {
+          if (currentStepIndex > 0) {
+            currentStepIndex--;
+            renderCurrentStep();
+          }
+        }
+      });
+
+      // Initial Render
+      renderCurrentStep();
+
+      function getFallbackSteps() {
+        return [
+          {
+            step: 1,
+            title: "آماده‌سازی کیس و نصب پایه‌های برنجی",
+            component: "شاسی کیس و پایه‌های برنجی",
+            description: "کیس کامپیوتر اسکلت اصلی است. پایه‌های برنجی را روی سینی نصب کرده و شیلد را جا بزنید.",
+            safetyWarning: "بار الکتریسیته ساکن بدن (ESD) را با دست زدن به بدنه فلزی تخلیه کنید.",
+            partId: "case",
+            instructions: ["درب‌های جانبی را باز کنید.", "پایه‌های برنجی را ببندید.", "شیلد را جا بزنید."],
+            model: "case.glb"
+          }
+        ];
+      }
+    })();
+  </script>
+</body>
+</html>

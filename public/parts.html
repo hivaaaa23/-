@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فهرست قطعات کامپیوتر - آزمایشگاه سخت‌افزار HardwareLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/annotations.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#f4f5f8] text-[#1a1d24] min-h-screen flex flex-col">
+
+  <!-- Header Navigation -->
+  <header class="bg-[#111927] border-b border-gray-800 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 text-white hover:text-blue-300 transition">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-extrabold text-sm shadow-md">
+            HL
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight block">HardwareLab</span>
+            <span class="text-[10px] text-gray-400 font-mono block">آزمایشگاه سخت‌افزار</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="flex items-center gap-1 sm:gap-2">
+        <a href="/parts.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600/90 text-white">
+          قطعات اصلی (۸)
+        </a>
+        <a href="/workshop.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          کارگاه مونتاژ
+        </a>
+        <a href="/" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          نمای جامع
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Hero Header -->
+    <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 inline-block mb-2">
+            اطلس قطعات سخت‌افزاری کامپیوتر
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+            بررسی ۸ قطعه بنیادین رایانه
+          </h1>
+          <p class="text-sm text-gray-600 mt-1 max-w-2xl">
+            برای مشاهده مدل سه‌بعدی تعاملی، نقاط حساس مهندسی، جدول مشخصات دقیق و آزمون تشخیصی، روی هر قطعه کلیک کنید.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 px-4 py-2 rounded-2xl">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-mono font-bold text-gray-700">8 OF 8 LOADED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parts Grid -->
+    <div id="parts-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="col-span-full flex items-center justify-center py-16 text-gray-500 text-sm">
+        در حال بارگذاری اطلاعات قطعات سخت‌افزار...
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 py-6 mt-12 text-center text-xs text-gray-500">
+    <p>HardwareLab - پلتفرم تعاملی یادگیری مهندسی سخت‌افزار و شبیه‌ساز سه‌بعدی کامپیوتر</p>
+  </footer>
+
+  <script>
+    async function initParts() {
+      const grid = document.getElementById('parts-grid');
+      try {
+        const res = await fetch('/data/parts.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const parts = data.parts || [];
+
+        grid.innerHTML = parts.map(part => {
+          const modelUrl = part.model ? (part.model.startsWith('/') ? part.model : '/3d-models/' + part.model) : '';
+          return `
+            <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-400/80 transition-all duration-300 flex flex-col group">
+              
+              <!-- 3D Mini View / Preview -->
+              <div class="relative h-56 bg-gradient-to-br from-[#111927] via-[#1a2638] to-[#0f172a] overflow-hidden" style="direction: ltr;">
+                <div class="absolute top-3 right-3 z-10">
+                  <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#0d1624]/90 text-blue-200 border border-white/10">
+                    ${part.id}
+                  </span>
+                </div>
+
+                ${part.model ? `
+                  <model-viewer
+                    src="${modelUrl}"
+                    alt="${part.name}"
+                    auto-rotate
+                    rotation-per-second="25deg"
+                    camera-controls
+                    touch-action="pan-y"
+                    shadow-intensity="1"
+                    exposure="0.9"
+                    interaction-prompt="none"
+                    style="width: 100%; height: 100%; direction: ltr; outline: none;"
+                  ></model-viewer>
+                ` : `
+                  <div class="model-placeholder">
+                    <div class="model-placeholder-icon">⚠️</div>
+                    <div class="model-placeholder-title">مدل به زودی اضافه خواهد شد</div>
+                    <div class="model-placeholder-subtitle">model coming soon</div>
+                  </div>
+                `}
+              </div>
+
+              <!-- Card Content -->
+              <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+                      ${part.category}
+                    </span>
+                    <span class="text-[11px] text-gray-400 font-medium">
+                      ${part.role || ''}
+                    </span>
+                  </div>
+
+                  <h3 class="text-lg font-extrabold text-gray-900 group-hover:text-blue-700 transition">
+                    ${part.name}
+                  </h3>
+                  <h4 class="text-xs font-mono font-semibold text-blue-600 mb-2">
+                    ${part.subtitle}
+                  </h4>
+
+                  <p class="text-xs text-gray-600 leading-relaxed line-clamp-2">
+                    ${part.shortDescription || part.description}
+                  </p>
+                </div>
+
+                <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                  <span class="text-[11px] text-gray-400 font-medium">
+                    ${part.specs ? part.specs.length + ' مشخصه فنی' : ''}
+                  </span>
+                  <a
+                    href="/part-detail.html?part=${part.id}"
+                    class="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-[#1d314b] group-hover:bg-blue-600 text-white font-bold text-xs transition shadow-sm"
+                  >
+                    <span>بررسی تخصصی</span>
+                    <span class="text-xs">←</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-red-50 border border-red-200 rounded-2xl p-6 text-center text-red-800 text-sm">
+            خطا در بارگذاری اطلاعات قطعات: ${err.message}
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initParts);
+  </script>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>جزئیات قطعه سخت‌افزاری - HardwareLab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/annotations.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#f4f5f8] text-[#1a1d24] min-h-screen flex flex-col">
+
+  <!-- Header Navigation -->
+  <header class="bg-[#111927] border-b border-gray-800 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2 text-white hover:text-blue-300 transition">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center font-extrabold text-sm shadow-md">
+            HL
+          </div>
+          <div>
+            <span class="font-extrabold text-base tracking-tight block">HardwareLab</span>
+            <span class="text-[10px] text-gray-400 font-mono block">آزمایشگاه سخت‌افزار</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="flex items-center gap-2">
+        <a href="/parts.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          ← بازگشت به فهرست قطعات
+        </a>
+        <a href="/workshop.html" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white hover:bg-white/10 transition">
+          کارگاه مونتاژ
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-xs text-gray-500 font-medium">
+      <a href="/parts.html" class="hover:text-blue-600 transition">قطعات</a>
+      <span class="text-gray-300">/</span>
+      <span id="breadcrumb-part-name" class="text-blue-700 font-bold">در حال بارگذاری...</span>
+    </nav>
+
+    <!-- Main Detail Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Column: 3D Interactive Model Viewer -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <div id="viewer-wrapper" class="relative w-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#111927] via-[#1a2638] to-[#0f172a] border border-[#2b3c56]/60 shadow-2xl h-[480px] sm:h-[540px] lg:h-[600px] model-viewer-container">
+          
+          <!-- Blueprint Grid Backdrop -->
+          <div class="absolute inset-0 pointer-events-none opacity-20 bg-[linear-gradient(rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.07)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+          <!-- Technical Badge (Top-Left) -->
+          <div class="absolute top-4 left-4 z-20 flex items-center gap-2 bg-[#0d1624]/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-xs font-mono text-blue-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="viewer-model-badge">3D // model</span>
+          </div>
+
+          <!-- Top-Right Controls -->
+          <div class="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-[#0d1624]/80 backdrop-blur-md p-1 rounded-xl border border-white/10">
+            <button id="btn-reset-cam" title="بازنشانی دوربین" class="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            </button>
+            <button id="btn-fullscreen" title="تمام‌صفحه" class="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            </button>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div id="viewer-loading" class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-[#0d1624]/70 backdrop-blur-sm text-gray-300">
+            <div class="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-mono text-blue-200">در حال بارگذاری مدل سه‌بعدی...</span>
+          </div>
+
+          <!-- Coming Soon / Fallback Placeholder -->
+          <div id="viewer-placeholder" class="model-placeholder hidden">
+            <div class="text-4xl mb-3">⚠️</div>
+            <div class="model-placeholder-title">مدل سه‌بعدی به زودی اضافه خواهد شد</div>
+            <div class="text-sm text-amber-300 font-bold mb-1">(model coming soon)</div>
+            <div id="placeholder-part-id" class="model-placeholder-subtitle">part-id</div>
+          </div>
+
+          <!-- Google Model Viewer -->
+          <model-viewer
+            id="main-model-viewer"
+            alt="3D Hardware Model"
+            camera-controls
+            touch-action="pan-y"
+            environment-image="neutral"
+            shadow-intensity="1.2"
+            shadow-softness="0.8"
+            exposure="1.0"
+            camera-orbit="-20deg 75deg 105%"
+            field-of-view="30deg"
+            interaction-prompt="none"
+            style="width: 100%; height: 100%; direction: ltr; outline: none;"
+          >
+            <!-- Hotspots dynamically populated here -->
+          </model-viewer>
+
+          <!-- Hotspot Description Card (clamped inside viewer) -->
+          <div id="hotspot-card" class="anno-card hidden">
+            <div class="flex items-start justify-between gap-2 mb-1.5">
+              <div class="flex items-center gap-1.5 text-blue-400 text-xs font-bold">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                <span id="hotspot-card-title">عنوان</span>
+              </div>
+              <button id="hotspot-card-close" class="text-gray-400 hover:text-white text-xs px-1">✕</button>
+            </div>
+            <p id="hotspot-card-desc" class="text-gray-300 text-xs leading-relaxed">توضیحات</p>
+            <div id="hotspot-card-step-row" class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-blue-300 hidden">
+              <span>مرتبط با مرحله:</span>
+              <span id="hotspot-card-step" class="font-medium text-white">مرحله</span>
+            </div>
+          </div>
+
+          <!-- Bottom Camera Presets -->
+          <div class="absolute bottom-3 left-3 right-3 sm:left-auto sm:right-3 z-20 flex items-center gap-1.5 overflow-x-auto p-1.5 bg-[#0a121e]/85 backdrop-blur-md rounded-xl border border-white/10">
+            <button onclick="setCameraOrbit('-20deg 75deg 105%')" class="px-2.5 py-1 text-[11px] text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition whitespace-nowrap">
+              زاویه‌دار
+            </button>
+            <button onclick="setCameraOrbit('0deg 10deg 110%')" class="px-2.5 py-1 text-[11px] text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition whitespace-nowrap">
+              نمای بالا
+            </button>
+            <button onclick="setCameraOrbit('0deg 90deg 120%')" class="px-2.5 py-1 text-[11px] text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition whitespace-nowrap">
+              روبرو
+            </button>
+            <button onclick="setCameraOrbit('-15deg 65deg 55%')" class="px-2.5 py-1 text-[11px] text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded-lg transition whitespace-nowrap font-medium">
+              بزرگ‌نمایی
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Helper Note -->
+        <div class="bg-white border border-gray-200 rounded-xl p-3.5 flex items-center justify-between text-xs text-gray-500 shadow-sm">
+          <div class="flex items-center gap-2">
+            <span class="text-blue-600 font-bold">💡</span>
+            <span>برای مشاهده مشخصات فنی دقیق، روی نشانگرهای نقاط حساس کلیک کنید.</span>
+          </div>
+          <span class="font-mono text-gray-400 text-[11px] hidden sm:inline">3D INTERACTIVE</span>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Specs, Notes & Mini Quiz -->
+      <div class="lg:col-span-5 space-y-5">
+        
+        <!-- Header Info Card -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span id="part-category-badge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
+              دسته‌بندی
+            </span>
+            <span id="part-id-badge" class="text-xs font-mono text-gray-400">id</span>
+          </div>
+
+          <h1 id="part-title" class="text-2xl sm:text-3xl font-extrabold text-gray-900">
+            نام قطعه
+          </h1>
+          <h2 id="part-subtitle" class="text-sm font-semibold text-blue-700 font-mono">
+            مدل دقیق قطعه
+          </h2>
+
+          <p id="part-description" class="text-xs sm:text-sm text-gray-600 leading-relaxed pt-1">
+            توضیحات جامع سخت‌افزاری...
+          </p>
+
+          <!-- Specifications Table -->
+          <div class="pt-3 border-t border-gray-100">
+            <h3 class="text-xs font-bold text-gray-800 mb-2.5 flex items-center gap-1.5">
+              <span>📑 مشخصات فنی</span>
+            </h3>
+
+            <div class="rounded-xl border border-gray-200 overflow-hidden text-xs">
+              <table class="w-full text-right divide-y divide-gray-100">
+                <tbody id="specs-tbody" class="divide-y divide-gray-100 bg-white">
+                  <!-- Rows populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safety Note -->
+        <div id="safety-note-card" class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 flex items-start gap-3 shadow-sm">
+          <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">
+            ⚠️
+          </div>
+          <div class="space-y-1 text-xs">
+            <h4 class="font-bold text-amber-900">نکات مهم ایمنی و نصب</h4>
+            <p id="safety-note-text" class="text-amber-800 leading-relaxed">متن نکته...</p>
+          </div>
+        </div>
+
+        <!-- Reflection Question -->
+        <div id="reflection-card" class="bg-blue-50/60 border border-blue-200 rounded-2xl p-4 flex items-start gap-3 shadow-sm">
+          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center flex-shrink-0 mt-0.5 text-sm">
+            🤔
+          </div>
+          <div class="space-y-1 text-xs">
+            <h4 class="font-bold text-blue-900">فکر کنید</h4>
+            <p id="reflection-text" class="text-blue-800 leading-relaxed">پرسش تحلیلی...</p>
+          </div>
+        </div>
+
+        <!-- Mini Quiz Card -->
+        <div id="quiz-card" class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
+            <h4 class="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+              <span>✍️ آزمون کوتاه یادگیری</span>
+            </h4>
+            <span class="text-[10px] font-mono text-gray-400">MINI QUIZ</span>
+          </div>
+
+          <p id="quiz-question" class="text-xs font-semibold text-gray-800 leading-relaxed">
+            پرسش چندگزینه‌ای...
+          </p>
+
+          <div id="quiz-options" class="space-y-2">
+            <!-- Radio Options -->
+          </div>
+
+          <div id="quiz-feedback" class="hidden p-3 rounded-xl text-xs leading-relaxed flex items-start gap-2">
+            <!-- Feedback explanation -->
+          </div>
+
+          <button id="quiz-submit-btn" disabled class="w-full py-2.5 rounded-xl bg-[#1d314b] hover:bg-[#263f60] disabled:bg-gray-200 disabled:cursor-not-allowed text-white text-xs font-bold transition shadow-sm">
+            بررسی پاسخ
+          </button>
+        </div>
+
+        <!-- Next Part Navigation Button -->
+        <a id="next-part-btn" href="#" class="w-full py-3.5 px-4 rounded-2xl bg-[#1d314b] text-white font-bold text-xs flex items-center justify-between hover:bg-[#263f60] shadow-md transition group">
+          <span>قطعه بعدی در مسیر یادگیری</span>
+          <div class="flex items-center gap-1 text-blue-200 group-hover:text-white">
+            <span id="next-part-label">ادامه مسیر</span>
+            <span class="text-base group-hover:-translate-x-1 transition-transform">←</span>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let currentPart = null;
+    let selectedAnswerIndex = null;
+    let quizSubmitted = false;
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function setCameraOrbit(orbit) {
+      const viewer = document.getElementById('main-model-viewer');
+      if (viewer) {
+        viewer.cameraOrbit = orbit;
+        viewer.cameraTarget = 'auto auto auto';
+      }
+    }
+
+    async function loadPartDetail() {
+      const partId = getQueryParam('part') || 'motherboard';
+      try {
+        const res = await fetch('/data/parts.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        const parts = data.parts || [];
+        
+        currentPart = parts.find(p => p.id === partId) || parts[0];
+        renderPart(currentPart, parts);
+      } catch (err) {
+        console.error('Error loading part detail:', err);
+        document.getElementById('breadcrumb-part-name').innerText = 'خطا در دریافت اطلاعات';
+      }
+    }
+
+    function renderPart(part, allParts) {
+      // 1. Breadcrumb & Header
+      document.title = part.name + ' - آزمایشگاه سخت‌افزار HardwareLab';
+      document.getElementById('breadcrumb-part-name').innerText = part.name;
+      document.getElementById('part-category-badge').innerText = part.category;
+      document.getElementById('part-id-badge').innerText = part.id;
+      document.getElementById('part-title').innerText = part.name;
+      document.getElementById('part-subtitle').innerText = part.subtitle;
+      document.getElementById('part-description').innerText = part.description;
+
+      // 2. Specifications Table
+      const specsTbody = document.getElementById('specs-tbody');
+      specsTbody.innerHTML = (part.specs || []).map((spec, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-gray-50/60' : 'bg-white'}">
+          <th class="py-2.5 px-3.5 font-medium text-gray-500 w-1/3">${spec.key}</th>
+          <td class="py-2.5 px-3.5 font-bold text-gray-900 font-mono">${spec.value}</td>
+        </tr>
+      `).join('');
+
+      // 3. Safety Note & Reflection
+      if (part.note) {
+        document.getElementById('safety-note-text').innerText = part.note;
+        document.getElementById('safety-note-card').classList.remove('hidden');
+      } else {
+        document.getElementById('safety-note-card').classList.add('hidden');
+      }
+
+      if (part.thinkAbout) {
+        document.getElementById('reflection-text').innerText = part.thinkAbout;
+        document.getElementById('reflection-card').classList.remove('hidden');
+      } else {
+        document.getElementById('reflection-card').classList.add('hidden');
+      }
+
+      // 4. Mini Quiz
+      renderQuiz(part.quiz?.[0]);
+
+      // 5. Next Part Button
+      const nextBtn = document.getElementById('next-part-btn');
+      if (part.nextPartId) {
+        const nextPartObj = allParts.find(p => p.id === part.nextPartId);
+        nextBtn.href = '/part-detail.html?part=' + part.nextPartId;
+        document.getElementById('next-part-label').innerText = nextPartObj ? nextPartObj.name : 'ادامه';
+        nextBtn.classList.remove('hidden');
+      } else {
+        nextBtn.href = '/workshop.html';
+        document.getElementById('next-part-label').innerText = 'ورود به کارگاه مونتاژ';
+      }
+
+      // 6. 3D Model & Hotspots
+      setup3DViewer(part);
+    }
+
+    function setup3DViewer(part) {
+      const viewer = document.getElementById('main-model-viewer');
+      const loader = document.getElementById('viewer-loading');
+      const placeholder = document.getElementById('viewer-placeholder');
+      const badge = document.getElementById('viewer-model-badge');
+      const hotspotCard = document.getElementById('hotspot-card');
+
+      hotspotCard.classList.add('hidden');
+
+      if (!part.model || part.model.trim() === '') {
+        // Model is missing -> show placeholder message immediately
+        viewer.classList.add('hidden');
+        loader.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        document.getElementById('placeholder-part-id').innerText = part.name + ' (' + part.id + ')';
+        badge.innerText = '3D // MISSING';
+        return;
+      }
+
+      placeholder.classList.add('hidden');
+      viewer.classList.remove('hidden');
+      loader.classList.remove('hidden');
+
+      const modelUrl = part.model.startsWith('/') ? part.model : '/3d-models/' + part.model;
+      badge.innerText = '3D // ' + part.model;
+      viewer.src = modelUrl;
+
+      // Remove existing hotspots
+      const existingHotspots = viewer.querySelectorAll('[slot^="hotspot-"]');
+      existingHotspots.forEach(el => el.remove());
+
+      // Insert Hotspots
+      const offsetPresets = [
+        { x: -12, y: -24 },
+        { x: 14, y: -20 },
+        { x: 18, y: 22 },
+        { x: -16, y: 24 }
+      ];
+
+      (part.hotspots || []).forEach((h, index) => {
+        const offset = offsetPresets[index % offsetPresets.length];
+        const isLeft = h.leaderDirection === 'left' || offset.x < 0;
+
+        const btn = document.createElement('button');
+        btn.slot = 'hotspot-' + h.id;
+        btn.className = 'anno';
+        btn.setAttribute('data-position', h.position);
+        btn.setAttribute('data-normal', h.normal || '0 1 0');
+        btn.setAttribute('aria-label', h.label);
+        btn.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+
+        btn.innerHTML = `
+          <svg class="anno-leader" style="width: 60px; height: 40px; top: ${offset.y < 0 ? '100%' : '-30px'}; left: ${isLeft ? '80%' : '-40px'};">
+            <line x1="${isLeft ? '10' : '50'}" y1="${offset.y < 0 ? '0' : '35'}" x2="${isLeft ? '45' : '15'}" y2="${offset.y < 0 ? '30' : '5'}"></line>
+          </svg>
+          <div class="anno-pill">
+            <span class="anno-dot"></span>
+            <span>${h.label}</span>
+          </div>
+        `;
+
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // Toggle active
+          const wasActive = btn.classList.contains('active');
+          viewer.querySelectorAll('.anno').forEach(el => el.classList.remove('active'));
+          
+          if (!wasActive) {
+            btn.classList.add('active');
+            document.getElementById('hotspot-card-title').innerText = h.label;
+            document.getElementById('hotspot-card-desc').innerText = h.description;
+            if (h.step) {
+              document.getElementById('hotspot-card-step').innerText = h.step;
+              document.getElementById('hotspot-card-step-row').classList.remove('hidden');
+            } else {
+              document.getElementById('hotspot-card-step-row').classList.add('hidden');
+            }
+            hotspotCard.classList.remove('hidden');
+          } else {
+            hotspotCard.classList.add('hidden');
+          }
+        });
+
+        viewer.appendChild(btn);
+      });
+
+      // Events for load & error
+      const onLoad = () => {
+        loader.classList.add('hidden');
+        placeholder.classList.add('hidden');
+      };
+      const onError = () => {
+        loader.classList.add('hidden');
+        viewer.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        document.getElementById('placeholder-part-id').innerText = part.name + ' (' + part.model + ')';
+      };
+
+      viewer.removeEventListener('load', onLoad);
+      viewer.removeEventListener('error', onError);
+      viewer.addEventListener('load', onLoad, { once: true });
+      viewer.addEventListener('error', onError, { once: true });
+    }
+
+    function renderQuiz(quiz) {
+      const card = document.getElementById('quiz-card');
+      if (!quiz) {
+        card.classList.add('hidden');
+        return;
+      }
+      card.classList.remove('hidden');
+
+      selectedAnswerIndex = null;
+      quizSubmitted = false;
+
+      document.getElementById('quiz-question').innerText = quiz.question;
+      const optionsContainer = document.getElementById('quiz-options');
+      const submitBtn = document.getElementById('quiz-submit-btn');
+      const feedback = document.getElementById('quiz-feedback');
+
+      feedback.classList.add('hidden');
+      submitBtn.innerText = 'بررسی پاسخ';
+      submitBtn.disabled = true;
+
+      optionsContainer.innerHTML = quiz.answers.map((ans, idx) => `
+        <button
+          onclick="selectQuizOption(${idx})"
+          id="quiz-opt-${idx}"
+          class="w-full text-right p-3 rounded-xl border border-gray-200 hover:border-blue-300 bg-white text-xs flex items-center justify-between transition-all"
+        >
+          <span>${ans.text}</span>
+          <span class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center radio-circle">
+          </span>
+        </button>
+      `).join('');
+
+      submitBtn.onclick = () => {
+        if (!quizSubmitted) {
+          if (selectedAnswerIndex === null) return;
+          quizSubmitted = true;
+          const chosen = quiz.answers[selectedAnswerIndex];
+          
+          // Style chosen & correct
+          quiz.answers.forEach((ans, i) => {
+            const opt = document.getElementById('quiz-opt-' + i);
+            if (ans.correct) {
+              opt.className = 'w-full text-right p-3 rounded-xl border border-emerald-500 bg-emerald-50 text-emerald-950 font-bold text-xs flex items-center justify-between transition-all';
+            } else if (i === selectedAnswerIndex && !ans.correct) {
+              opt.className = 'w-full text-right p-3 rounded-xl border border-red-400 bg-red-50 text-red-950 text-xs flex items-center justify-between transition-all';
+            }
+          });
+
+          feedback.className = chosen.correct 
+            ? 'p-3 rounded-xl text-xs leading-relaxed flex items-start gap-2 bg-emerald-50 border border-emerald-200 text-emerald-900'
+            : 'p-3 rounded-xl text-xs leading-relaxed flex items-start gap-2 bg-amber-50 border border-amber-200 text-amber-900';
+          feedback.innerHTML = `
+            <span class="text-sm">${chosen.correct ? '✅' : '❌'}</span>
+            <span>${chosen.explanation}</span>
+          `;
+          feedback.classList.remove('hidden');
+
+          submitBtn.innerText = 'پاسخ مجدد';
+          submitBtn.disabled = false;
+        } else {
+          renderQuiz(quiz);
+        }
+      };
+    }
+
+    window.selectQuizOption = function(index) {
+      if (quizSubmitted) return;
+      selectedAnswerIndex = index;
+      const opts = document.querySelectorAll('#quiz-options button');
+      opts.forEach((opt, idx) => {
+        const circle = opt.querySelector('.radio-circle');
+        if (idx === index) {
+          opt.className = 'w-full text-right p-3 rounded-xl border border-blue-600 bg-blue-50/60 text-blue-950 font-bold ring-1 ring-blue-500 text-xs flex items-center justify-between transition-all';
+          circle.className = 'w-4 h-4 rounded-full border border-blue-600 bg-blue-600 flex items-center justify-center radio-circle';
+          circle.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white"></span>';
+        } else {
+          opt.className = 'w-full text-right p-3 rounded-xl border border-gray-200 hover:border-blue-300 bg-white text-xs flex items-center justify-between transition-all';
+          circle.className = 'w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center radio-circle';
+          circle.innerHTML = '';
+        }
+      });
+      document.getElementById('quiz-submit-btn').disabled = false;
+    };
+
+    // Close hotspot card when clicked
+    document.getElementById('hotspot-card-close').onclick = () => {
+      document.getElementById('hotspot-card').classList.add('hidden');
+      document.querySelectorAll('#main-model-viewer .anno').forEach(el => el.classList.remove('active'));
+    };
+
+    // Reset camera button
+    document.getElementById('btn-reset-cam').onclick = () => {
+      setCameraOrbit('-20deg 75deg 105%');
+      document.getElementById('hotspot-card').classList.add('hidden');
+      document.querySelectorAll('#main-model-viewer .anno').forEach(el => el.classList.remove('active'));
+    };
+
+    // Fullscreen toggle
+    document.getElementById('btn-fullscreen').onclick = () => {
+      const container = document.getElementById('viewer-wrapper');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', loadPartDetail);
+  </script>
+</body>
+</html>

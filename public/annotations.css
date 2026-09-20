@@ -1,0 +1,178 @@
+/* ==========================================================================
+   annotations.css - 3D Model Hotspot & Leader-Line Component System
+   Supports Google <model-viewer> with responsive RTL & LTR positioning
+   ========================================================================== */
+
+/* Host element must be LTR so coordinates are not mirrored */
+.model-viewer-container {
+  direction: ltr !important;
+  text-align: left !important;
+  position: relative;
+}
+
+/* Hotspot button wrapper */
+.anno {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+  outline: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 10;
+}
+
+.anno:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 4px;
+}
+
+/* Hotspot Pill Tag */
+.anno-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background-color: rgba(15, 23, 42, 0.92);
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: right;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.anno:hover .anno-pill {
+  background-color: #1e293b;
+  border-color: rgba(96, 165, 250, 0.6);
+  transform: translateY(-1px);
+}
+
+.anno.active .anno-pill,
+.anno-pill.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #93c5fd;
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+  transform: scale(1.05);
+}
+
+/* Glowing Indicator Dot */
+.anno-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #60a5fa;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px #60a5fa;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.anno:hover .anno-dot {
+  background-color: #93c5fd;
+  transform: scale(1.2);
+}
+
+.anno.active .anno-dot,
+.anno-pill.active .anno-dot {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px #ffffff;
+}
+
+/* Leader-Line SVG (Dashed connection to surface) */
+.anno-leader {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  overflow: visible;
+}
+
+.anno-leader line {
+  stroke: rgba(96, 165, 250, 0.75);
+  stroke-width: 1.5px;
+  stroke-dasharray: 2 2;
+  stroke-linecap: round;
+}
+
+.anno.active .anno-leader line {
+  stroke: #93c5fd;
+  stroke-width: 2px;
+  stroke-dasharray: none;
+}
+
+/* Description Tooltip Card */
+.anno-card {
+  position: absolute;
+  bottom: 3.5rem;
+  right: 1rem;
+  max-width: 20rem;
+  width: calc(100% - 2rem);
+  z-index: 30;
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 0.875rem;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  direction: rtl;
+  text-align: right;
+  animation: annoFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes annoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Coming Soon Model Placeholder */
+.model-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  background-color: rgba(13, 22, 36, 0.94);
+  backdrop-filter: blur(8px);
+  color: #fbbf24;
+  direction: rtl;
+}
+
+.model-placeholder-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.75rem;
+  color: #f59e0b;
+}
+
+.model-placeholder-title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #fef3c7;
+  margin-bottom: 0.25rem;
+}
+
+.model-placeholder-subtitle {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-family: monospace;
+  direction: ltr;
+}
