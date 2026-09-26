@@ -9,17 +9,25 @@
     <meta property="og:description" content="سامانه آموزش سه‌بعدی و تعاملی سخت‌افزار کامپیوتر و کارگاه مونتاژ و عیب‌یابی به زبان فارسی" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Google Fonts: Vazirmatn & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Google model-viewer for 3D GLB/glTF -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   </head>
   <body class="bg-[#f4f5f8] text-[#1a1d24] antialiased selection:bg-[#2c4a6e] selection:text-white">
-    <div id="root"></div>
+    <div id="root">
+      <div id="app-loading" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: system-ui, -apple-system, sans-serif; direction: rtl; text-align: center; padding: 24px; background: #f4f5f8; color: #1e293b;">
+        <div style="width: 44px; height: 44px; border: 3px solid #cbd5e1; border-top-color: #2563eb; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
+        <h2 style="font-size: 18px; font-weight: 700; margin: 0 0 8px 0;">در حال بارگذاری آزمایشگاه سخت‌افزار…</h2>
+        <p style="font-size: 13px; color: #64748b; max-width: 440px; line-height: 1.6; margin: 0;">
+          سامانه آموزش تعاملی سخت‌افزار رایانه
+        </p>
+        <noscript>
+          <div style="margin-top: 20px; padding: 12px 18px; background: #fee2e2; border: 1px solid #f87171; border-radius: 8px; color: #991b1b; font-size: 13px;">
+            ⚠️ جاوااسکریپت در مرورگر شما غیرفعال است. لطفاً آن را فعال نمایید.
+          </div>
+        </noscript>
+      </div>
+      <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -118,9 +118,12 @@ export const PartsView: React.FC<PartsViewProps> = ({ parts, onSelectPart }) => 
                   {part.category}
                 </span>
 
-                {/* <model-viewer> live interactive mini-preview */}
                 <ModelViewerElement
-                  src={part.model.startsWith('/3d-models/') ? part.model : `/3d-models/${part.model.replace(/^\//, '').replace(/^3d-models\//, '')}`}
+                  src={(() => {
+                    const clean = part.model.replace(/^\/+/, '').replace(/^3d-models\//, '');
+                    const baseUrl = (import.meta.env.BASE_URL || './').replace(/\/+$/, '');
+                    return `${baseUrl}/3d-models/${clean}`;
+                  })()}
                   alt={part.name}
                   auto-rotate
                   rotation-per-second="25deg"

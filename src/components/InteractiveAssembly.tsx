@@ -59,7 +59,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_ram: 'مادربرد کل سیستم را در بر می‌گیرد و در اسلات‌های رم جای نمی‌گیرد!',
       slot_pcie: 'شیار PCIe مخصوص کارت‌های توسعه مانند گرافیک است، نه مادربرد!'
     },
-    modelUrl: '/3d-models/motherboard.glb'
+    modelUrl: '3d-models/motherboard.glb'
   },
   {
     id: 'cpu',
@@ -75,7 +75,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_pcie: 'شیار PCIe برای کارت گرافیک است. پردازنده باید در سوکت مربعی با اهرم فلزی بنشیند.',
       slot_case_tray: 'پردازنده نمی‌تواند مستقیماً روی سینی کیس پیچ شود؛ ابتدا باید مادربرد نصب شود.'
     },
-    modelUrl: '/3d-models/cpu.glb'
+    modelUrl: '3d-models/cpu.glb'
   },
   {
     id: 'cooling',
@@ -91,7 +91,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_ram: 'خنک‌کننده پردازنده باید روی CPU سوار شود، نه روی شکاف‌های رم!',
       slot_pcie: 'خنک‌کننده بر روی پردازنده قرار می‌گیرد، نه روی شیار کارت گرافیک!'
     },
-    modelUrl: '/3d-models/cooling.glb'
+    modelUrl: '3d-models/cooling.glb'
   },
   {
     id: 'ram',
@@ -107,7 +107,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_cpu: 'رم درون اسلات‌های DIMM عمودی می‌نشیند، نه در سوکت مربعی پردازنده!',
       slot_psu: 'رم قطعه حساسی است و در اسلات‌های روی مادربرد نصب می‌شود، نه در محفظه پاور!'
     },
-    modelUrl: '/3d-models/ram.glb'
+    modelUrl: '3d-models/ram.glb'
   },
   {
     id: 'storage',
@@ -122,7 +122,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_ram: 'اسلات رم برای ماژول‌های رم است. SSD دارای شیار بسیار ظریف M.2 با پیچ انتهایی است.',
       slot_pcie: 'شکاف PCIe x16 برای کارت‌های بزرگ است؛ M.2 سوکت بسیار کوچک‌تری دارد.'
     },
-    modelUrl: '/3d-models/storage.glb'
+    modelUrl: '3d-models/storage.glb'
   },
   {
     id: 'gpu',
@@ -137,7 +137,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_ram: 'کارت گرافیک در اسلات رم جا نمی‌شود! برای کارت گرافیک از شیار PCIe x16 همراه ضامن استفاده کنید.',
       slot_cpu: 'کارت گرافیک روی شیار توسعه نصب می‌شود، نه درون سوکت پردازنده!'
     },
-    modelUrl: '/3d-models/gpu.glb'
+    modelUrl: '3d-models/gpu.glb'
   },
   {
     id: 'power_supply',
@@ -152,7 +152,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_cpu_cooler: 'پاور ابعاد بزرگی دارد و باید در کف کیس قرار گیرد، نه روی مادربرد!',
       slot_case_tray: 'پاور در محفظه تونلی کف کیس پیچ می‌شود، نه روی سینی مادربرد!'
     },
-    modelUrl: '/3d-models/power_supply.glb'
+    modelUrl: '3d-models/power_supply.glb'
   },
   {
     id: 'cable_atx',
@@ -167,7 +167,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_cpu_power: 'این کابل ۲۴ پین است و برای هدر برق اصلی مادربرد است، نه هدر ۸ پین پردازنده!',
       slot_pcie: 'کابل ۲۴ پین به هدر کناری مادربرد متصل می‌شود، نه اسلات کارت گرافیک!'
     },
-    modelUrl: '/3d-models/power_supply.glb'
+    modelUrl: '3d-models/power_supply.glb'
   },
   {
     id: 'cable_eps',
@@ -182,7 +182,7 @@ const PC_PARTS: ComponentItem[] = [
       slot_atx_cable: 'این کابل ۸ پین است و در هدر ۲۴ پین جا نمی‌رود! آن را به هدر بالای CPU متصل کنید.',
       slot_pcie: 'کابل ۸ پین پردازنده نباید با پورت‌های دیگر اشتباه گرفته شود؛ جای آن در بالای سوکت پردازنده است.'
     },
-    modelUrl: '/3d-models/power_supply.glb'
+    modelUrl: '3d-models/power_supply.glb'
   }
 ];
 

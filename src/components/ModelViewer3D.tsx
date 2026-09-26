@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import '@google/model-viewer';
 import { Hotspot } from '../types';
 import { 
   RotateCw, 
@@ -62,13 +63,14 @@ export const ModelViewer3D: React.FC<ModelViewer3DProps> = ({
   const [isPowerActive, setIsPowerActive] = useState<boolean>(false);
   const [showPedestal, setShowPedestal] = useState<boolean>(true);
 
-  // Normalize model source path
+  // Normalize model source path with relative base URL support
   const resolvedModelSrc = React.useMemo(() => {
     if (!modelSrc) return '';
-    if (modelSrc.startsWith('/3d-models/')) return modelSrc;
-    if (modelSrc.startsWith('3d-models/')) return `/${modelSrc}`;
-    const filename = modelSrc.replace(/^\//, '');
-    return `/3d-models/${filename}`;
+    if (modelSrc.startsWith('http://') || modelSrc.startsWith('https://')) return modelSrc;
+    const cleanSrc = modelSrc.replace(/^\/+/, '');
+    const filename = cleanSrc.replace(/^3d-models\//, '');
+    const baseUrl = (import.meta.env.BASE_URL || './').replace(/\/+$/, '');
+    return `${baseUrl}/3d-models/${filename}`;
   }, [modelSrc]);
 
   // Model physical dimensions dictionary

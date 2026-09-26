@@ -71,13 +71,31 @@ export const ChatAssistant: React.FC = () => {
       };
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {
-      const errorMsg: ChatMessage = {
+      // Offline / Static GitHub Pages Intelligent Fallback
+      const lower = query.toLowerCase();
+      let fallbackReply = '';
+
+      if (lower.includes('رم') || lower.includes('ram')) {
+        fallbackReply = '📌 نکات کلیدی حافظه رم (RAM):\n• در مادربرد ASUS Prime H510M-K از حافظه‌های DDR4 با فرکانس تا ۳۲۰۰MHz پشتیبانی می‌شود.\n• شیار وسط رم (Key Notch) نامتقارن است؛ قبل از جا زدن جهت را با شیار داخل اسلات مادربرد چک کنید.\n• دو طرف ضامن‌ها را با فشار ملایم قفل نمایید.\n⚠️ کد بوق ۱-۱-۲-۳ نشانه عدم شناسایی یا جا نخوردن درست رم است.';
+      } else if (lower.includes('پردازنده') || lower.includes('cpu') || lower.includes('سی پی یو')) {
+        fallbackReply = '📌 راهنمای نصب پردازنده (CPU):\n• اهرم ضامن فلزی سوکت LGA 1200 را باز کنید.\n• مثلث طلایی گوشه پردازنده را با نشانگر روی سوکت هماهنگ نمایید.\n• بدون اعمال فشار پردازنده را روی پین‌ها بنشانید و اهرم را قفل کنید.';
+      } else if (lower.includes('بوق') || lower.includes('بایوس') || lower.includes('beep') || lower.includes('bios')) {
+        fallbackReply = '🔊 جدول کدهای بوق بایوس (BIOS Beep Codes):\n• ۱-۱-۲-۳: خطای حافظه رم — تمیز کردن پایه‌ها و جا زدن مجدد.\n• ۱-۱-۳-۳: خطای کارت گرافیک — بررسی کابل برق و قفل PCIe.\n• ۱-۳-۱-۳: خطای پردازنده (CPU) — بررسی کابل ۸ پین تغذیه.\n• ۱-۳-۳-۱: خطای مادربرد و ریست تنظیمات بایوس با درآوردن باتری CMOS.';
+      } else if (lower.includes('تصویر') || lower.includes('مانیتور') || lower.includes('صفحه سیاه')) {
+        fallbackReply = '🖥️ عیب‌یابی عدم نمایش تصویر:\n۱. بررسی کنید کابل تصویر (HDMI/DP) حتماً به کارت گرافیک مجزا وصل شده باشد نه خروجی مادربرد.\n۲. کابل برق ۸ پین گرافیک محکم در جایش قفل باشد.\n۳. رم‌ها را یک‌بار خارج و دوباره جا بزنید.';
+      } else if (lower.includes('پاور') || lower.includes('روشن') || lower.includes('برق')) {
+        fallbackReply = '⚡ بررسی مدار تغذیه و روشن نشدن سیستم:\n۱. کلید صفر/یک (I/O) پشت پاور را روشن کنید.\n۲. کانکتور ۲۴ پین و ۸ پین بالای CPU را چک نمایید.\n۳. اتصال سیم‌های Power SW پنل جلو به مادربرد را بررسی کنید.';
+      } else {
+        fallbackReply = `سلام! در حالت استاتیک (بدون سرور مستقیم)، می‌توانید درباره موارد زیر از من بپرسید:\n• مشخصات و راهنمای نصب رم، پردازنده و کارت گرافیک\n• کدهای بوق بایوس و رفع مشکل عدم تصویردهی مانیتور\n• نکات ایمنی مونتاژ و اتصالات برق پاور`;
+      }
+
+      const fallbackMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         sender: 'bot',
-        text: 'خطا در برقراری ارتباط با سرور. لطفاً دوباره تلاش کنید.',
+        text: fallbackReply,
         time: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })
       };
-      setMessages(prev => [...prev, errorMsg]);
+      setMessages(prev => [...prev, fallbackMsg]);
     } finally {
       setIsLoading(false);
     }
